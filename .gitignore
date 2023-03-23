@@ -1,0 +1,12 @@
+omicsbench*.tar.gz
+omicsbench.Rcheck/
+*.swp
+.Rhistory
+
+.Rhistory
+.Rhistory
+*.RDS
+__test*
+Docker*
+attributes
+Rprofile*

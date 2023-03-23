@@ -1,0 +1,12 @@
+parseDatTerm <- omicsViewer:::parseDatTerm 
+getUPRefProteomeID <- omicsViewer:::getUPRefProteomeID 
+downloadUPRefProteome <- omicsViewer:::downloadUPRefProteome 
+getSteps <- omicsViewer:::getSteps 
+getOutliersUp <- omicsViewer:::getOutliersUp 
+getOutliersDown <- omicsViewer:::getOutliersDown 
+read.proteinGroups <- omicsViewer:::read.proteinGroups 
+read.proteinGroups.lf <- omicsViewer:::read.proteinGroups.lf 
+read.proteinGroups.tmt <- omicsViewer:::read.proteinGroups.tmt 
+phenoTemplate <- omicsViewer:::phenoTemplate 
+validMQFolder <- omicsViewer:::validMQFolder 
+getMQParams <- omicsViewer:::getMQParams 
