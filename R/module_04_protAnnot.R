@@ -137,7 +137,7 @@ module_annot <- function(id, obj, annot_dir_global) {
           showModal(
             modalDialog(
               .msg$deleteConfirm[[lan]],
-              footer = actionButton(ns("deleteOld"), label = "删除并进入下一步"), easyClose = TRUE
+              footer = actionButton(ns("deleteOld"), label = .msg$delandgo[[lan]]), easyClose = TRUE
             )
           )
         }

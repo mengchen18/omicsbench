@@ -265,7 +265,7 @@ lan <- "en"
     en = "Select sources of annotations"
     ),
   annot_source2 = c(
-    cn = "", 
+    cn = "Annotation sources", 
     en = "Annotation sources"),
   annot_datacol = c(
     cn = "选择用于注释的列：", 
