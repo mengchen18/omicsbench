@@ -1,4 +1,11 @@
-module_ttest <- function(id, esv) {
+module_ttest <- function(id, esv, name_internal = "S6.1_ttest", name_show = "ttest", test = c("t.test", "DESeq2")[1]) {
+  
+  test <- switch(
+    test, 
+    "t.test" = "t.test",
+    "DESeq2" = "DESeq2"
+    )
+
   moduleServer(
     id,
     function(input, output, session) {
@@ -59,7 +66,7 @@ module_ttest <- function(id, esv) {
       tsm <- reactiveVal(df0)
       
       observe({
-        req(at <- attr(esv(), "S6.1_ttest"))
+        req(at <- attr(esv(), name_internal))
         tsm( at )
       })
       
@@ -163,22 +170,39 @@ module_ttest <- function(id, esv) {
         show_modal_spinner(text = .msg$calculating[[lan]])
         rl <- esv()
         # if parameter doesn't change, don't do anything
-        if (!identical(tsm(), attr(esv(), "S6.1_ttest"))) {
+        if (!identical(tsm(), attr(esv(), name_internal))) {
           ofd <- fData(rl)
           gs <- attr(ofd, "GS")
-          dd <- prepOmicsViewer(
-            expr = obj()$expr, pData = obj()$pdata, fData = obj()$fdata, PCA = FALSE, t.test = as.matrix(tsm()), 
-            ttest.fillNA = TRUE, SummarizedExperiment = FALSE)
-          fd <- fData(dd)
+
+          if (test == "t.test") {
+            dd <- prepOmicsViewer(
+              expr = obj()$expr, pData = obj()$pdata, fData = obj()$fdata, PCA = FALSE, t.test = as.matrix(tsm()), 
+              ttest.fillNA = TRUE, SummarizedExperiment = FALSE)
+            fd <- fData(dd)
+          } else if (test == "DESeq2") {
+            fd <-  prepDESeq2(
+              expr = obj()$expr, pData = obj()$pdata, fData = obj()$fdata,
+              invlog10 = TRUE, 
+              contrast = as.matrix(tsm())
+              )
+          } else 
+            stop ("Unknown test!")
+
           for (i in colnames(fd))
             ofd[, i] <- fd[, i]
           attr(ofd, "GS") <- gs
           fData(rl) <- ofd
-          attr(rl, "S6.1_ttest") <- tsm()
+          attr(rl, name_internal) <- tsm()
         }
         cp <- paste(tsm()[1, 2], tsm()[1, 3], sep = "_vs_")
-        attr(rl, "fx") <- paste("ttest", cp, "mean.diff", sep = "|")
-        attr(rl, "fy") <- paste("ttest", cp, "log.fdr", sep = "|")
+
+        if (test == "t.test") {
+          attr(rl, "fx") <- paste(name_show, cp, "mean.diff", sep = "|")
+          attr(rl, "fy") <- paste(name_show, cp, "log.fdr", sep = "|")
+        } else  {
+          attr(rl, "fx") <- paste(name_show, cp, "log2FoldChange", sep = "|")
+          attr(rl, "fy") <- paste(name_show, cp, "log.padj", sep = "|")
+        }        
         saveRDS(rl, file = attr(rl, "filePath"))
         remove_modal_spinner()
         rl

@@ -52,6 +52,9 @@ cruncher_ui <- function(id) {
           ),
           menuItem(
             .msg$stepupdown[[lan]], tabName = ns("steps"),  icon = icon("times"), badgeLabel = .msg$notanalysed[[lan]], badgeColor = "purple"
+          ),
+          menuItem(
+            .msg$deseq2[[lan]], tabName = ns("deseq2"),  icon = icon("not-equal"), badgeLabel = .msg$notanalysed[[lan]], badgeColor = "purple"
           )
         ),
         menuItem(.msg$checkres[[lan]], tabName = ns("viewer"), icon = icon("check-square"), badgeLabel = .msg$nores[[lan]], badgeColor = "purple")
@@ -78,6 +81,10 @@ cruncher_ui <- function(id) {
         tabItem(
           tabName = ns("ttest"),
           module_ttest_ui(ns("stats_ttest"))
+        ),
+        tabItem(
+          tabName = ns("deseq2"),
+          module_ttest_ui(ns("stats_deseq2"))
         ),
         tabItem(
           tabName = ns("outlier"),
@@ -192,6 +199,10 @@ cruncher_server <- function(id, project_dir, annot_dir, ...) {
           updateTabItemsBadge(session, "steps", badgeLabel = .msg$notanalysed[[lan]], badgeColor = "purple") else
             updateBadge("steps", length(j) > 0 )
 
+        if ( is.null( j <- attr(esv(), "S6.5_deseq2")) ) 
+          updateTabItemsBadge(session, "deseq2", badgeLabel = .msg$notanalysed[[lan]], badgeColor = "purple") else
+            updateBadge("deseq2", nrow(j) > 0)
+
         ff <- file.exists(file.path( dirname(attr(obj(), "S1_dataLoading")$filePath), "ESVObj.RDS" ))
         if (ff)  updateTabItemsBadge(session, "viewer", badgeLabel = .msg$ready[[lan]], badgeColor = "green") else
           updateTabItemsBadge(session, "viewer", badgeLabel = .msg$nores[[lan]], badgeColor = "purple")
@@ -268,6 +279,7 @@ cruncher_server <- function(id, project_dir, annot_dir, ...) {
         }
         esv(res0())
       })
+      
       #     
       d03.1 <- module_ttest(id = "stats_ttest", esv = esv)
       observeEvent(d03.1(), {
@@ -293,6 +305,14 @@ cruncher_server <- function(id, project_dir, annot_dir, ...) {
         esv( d03.3() )
         updateTabItems(session, inputId = "tabs", selected = ns("viewer"))
       })
+
+      d03.5 <- module_ttest(id = "stats_deseq2", esv = esv, name_internal = "S6.5_deseq2", name_show = "DESeq2", test ="DESeq2")
+      observeEvent(d03.5(), {
+        req(d03.5())
+        esv( d03.5() )
+        updateTabItems(session, inputId = "tabs", selected = ns("viewer"))
+      })
+
       
       callModule(
         omicsViewer:::app_module, id = "app",

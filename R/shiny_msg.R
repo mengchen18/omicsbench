@@ -8,6 +8,10 @@ lan <- "en"
     the calculated results will be deleted. Do you want to delete the old results
     and continue?"
     ),
+  deseq2  = c(
+    cn = "两组比较 DESeq2", 
+    en = "DESeq2"
+    ),
   delandgo = c(
     cn = "删除并进入下一步",
     en = "Delete and continue"

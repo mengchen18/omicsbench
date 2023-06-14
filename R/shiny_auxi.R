@@ -386,3 +386,43 @@ collects data originally from %s [please cite the relevent publications]",
   lapply(tx, tags$p)
 }
 
+
+#' 
+#' @importFrom DESeq2 DESeqDataSetFromMatrix results estimateSizeFactors estimateDispersions nbinomWaldTest
+prepDESeq2 <- function(expr, fData, pData, contrast, invlog10 = TRUE) {
+  if (invlog10) {
+    expr <- round(10^expr, 0)
+  } else
+    expr <- round(expr, 0)
+  expr[is.na(expr)] <- 0
+  
+  l2 <- lapply(unique(contrast[, 1]), function(v) {
+    dds <- DESeqDataSetFromMatrix(
+      countData = expr,
+      colData = pData,
+      design = as.formula(paste("~",  v)))
+    
+    dds = estimateSizeFactors(dds)
+    dds = estimateDispersions(dds)
+    dds = nbinomWaldTest(dds)
+    
+    ms <- contrast[contrast[, 1] == v, , drop = FALSE]
+    contrast_list = split(ms, row(ms))
+    
+    l <- lapply(contrast_list, function(a_name) {
+      d <- results(dds, contrast = c(a_name[1], a_name[2], a_name[3]))
+      dd <- as.data.frame(d)
+      dd$log.pval <- -log10( dd$pvalue )
+      dd$log.padj <- -log10( dd$padj)
+      colnames(dd) <- paste(paste(a_name[-1], collapse = "_vs_"), colnames(dd), sep = "|")
+      dd
+    })
+    names(l) <- NULL
+    do.call(cbind, l)
+  })
+  ll2 <- do.call(cbind, l2)
+  colnames(ll2) <- paste("DESeq2", colnames(ll2), sep = "|")
+  ll2
+}
+
+
