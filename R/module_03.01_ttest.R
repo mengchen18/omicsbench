@@ -211,10 +211,10 @@ module_ttest <- function(id, esv, name_internal = "S6.1_ttest", name_show = "tte
   )
 }
 
-module_ttest_ui <- function(id) {
+module_ttest_ui <- function(id, title = .msg$ttesttitle[[lan]]) {
   ns <- NS(id)
   tagList(
-    absolutePanel(top = -10, left = 275, tags$h2(.msg$ttesttitle[[lan]]), style = "z-index: 1111;"),
+    absolutePanel(top = -10, left = 275, tags$h2(title), style = "z-index: 1111;"),
     absolutePanel(top = 5, right = 20, actionButton(inputId = ns("save"), label = .msg$analyzecheck[[lan]]), style = "z-index: 1111;" ),
     absolutePanel(
       top = 20, right = 165, style = "z-index: 1111;",

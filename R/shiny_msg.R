@@ -449,6 +449,10 @@ lan <- "en"
   sum_coldata = c(
     cn = "用于查询基因功能注释数据库的蛋白信息列",
     en = "ID column in omics data for functional annotation"
+    ),
+  deseq2title = c(
+    cn = "两组比较 DESeq2",
+    en = "Two groups differential expression - DESeq2"
     )
 )
 

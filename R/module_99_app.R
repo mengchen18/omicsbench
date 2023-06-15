@@ -84,7 +84,7 @@ cruncher_ui <- function(id) {
         ),
         tabItem(
           tabName = ns("deseq2"),
-          module_ttest_ui(ns("stats_deseq2"))
+          module_ttest_ui(ns("stats_deseq2"), title = .msg$deseq2title[[lan]])
         ),
         tabItem(
           tabName = ns("outlier"),
@@ -140,8 +140,8 @@ cruncher_server <- function(id, project_dir, annot_dir, ...) {
       }
       validValue <- function(x) {
         if (inherits(x, "logical"))
-          return(x)
-        !is.null(x) && length(x) > 0 && !x %in% c("", "none")
+          return(all(x))
+        !is.null(x) && length(x) > 0 && any(!x %in% c("", "none"))
       }
       validValues <- function(...) {
         al <- list(...)

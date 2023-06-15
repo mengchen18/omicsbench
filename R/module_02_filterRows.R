@@ -97,7 +97,7 @@ module_filterRow <- function(id, obj) {
       output$phenoTab <- DT::renderDT({
         req(tab <- dat()$pdata)
         tab <- formatDTScrollY( tab, height = 475 )
-        if ( input$phenoCol %in% colnames(dat()$pdata) && input$phenoVar ) 
+        if ( input$phenoCol %in% colnames(dat()$pdata) && any(input$phenoVar) ) 
           tab <- formatStyle(tab, input$phenoCol, backgroundColor = "#85C1E9")
         tab
       }, server = FALSE)

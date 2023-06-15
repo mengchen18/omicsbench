@@ -1,8 +1,8 @@
 Package: omicsbench
 Type: Package
 Title: What the package does (short line)
-Version: 0.6.0
-Date: 2023-03-10
+Version: 0.6.2
+Date: 2023-06-14
 Author: Who wrote it
 Maintainer: Chen Meng <mengchen18@gmail.com>
 Imports: Biobase, DT, omicsViewer, curl, excelR, flatxml,
