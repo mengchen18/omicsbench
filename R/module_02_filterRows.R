@@ -80,8 +80,13 @@ module_filterRow <- function(id, obj) {
           vv <- -Inf
         if (vv > 0 && vv < 1)
           vv <- quantile(dat()$exprs, na.rm = TRUE, probs = vv)
+
+        if (is.null(conf$groupMinVar))
+          gvar <- NULL else
+            gvar <- dat()$pdata[[conf$groupMinVar]]
+
         conf$index <- filterRow(
-          dat()$exprs, max.value = vv, var = conf$groupMinVar, min.rep = as.integer(conf$groupMinVarN)
+          dat()$exprs, max.value = vv, var = gvar, min.rep = as.integer(conf$groupMinVarN)
         )
       })
       
